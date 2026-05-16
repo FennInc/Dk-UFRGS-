@@ -1,0 +1,9 @@
+# Ignorar arquivos objeto compilados
+*.o
+src/*.o
+
+# Ignorar o executável do jogo
+*.exe
+jogo.exe
+jogo
+
