@@ -3,7 +3,7 @@
 
 void DesenharMenuPrincipal(int opcaoFocada, int screenWidth, int screenHeight) {
 
-    Image logo = LoadImage("resources/logo_DK.png"); // Carrega a imagem do logo
+    Image logo = LoadImage("resources/logo_DK.png"); 
     Texture2D texture = LoadTextureFromImage(logo);
     UnloadImage(logo);
 
