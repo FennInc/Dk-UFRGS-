@@ -3,7 +3,6 @@
 #include "raylib.h"
 #include "ranking.h"
 
-
 //usando static pra nao sair do escopo daqui, preciso controlar umas outras coisas
 static int inserindoNome = 0;
 static float tempoSalvar = 0;
@@ -11,10 +10,27 @@ static char nomeInput[9] = "\0";
 static int letrasCount = 0;
 
 void SalvarNovoRecorde(float tempoFinal) {
-    tempoSalvar = tempoFinal;
-    inserindoNome = 1;       //jaja explioc o pq disso
-    nomeInput[0] = '\0';
-    letrasCount = 0;
+    RegistroPlacar tempRecords[6]; 
+    int total = 0;
+    FILE *f = fopen("placar.bin", "rb");
+    if (f != NULL) {
+        while (total < 5 && fread(&tempRecords[total], sizeof(RegistroPlacar), 1, f) == 1) { //pega o total de espacos no recorde
+            total++;
+        }
+        fclose(f);
+    }
+
+
+    int ehRecorde = (total < 5) || (tempoFinal < tempRecords[total - 1].tempo);
+
+    if (ehRecorde) {
+        tempoSalvar = tempoFinal;
+        inserindoNome = 1; 
+        nomeInput[0] = '\0';
+        letrasCount = 0;
+    } else {
+        inserindoNome = 0;
+    }
 }
 
 void AtualizarTelaRanking(int *estadoAtual) {
