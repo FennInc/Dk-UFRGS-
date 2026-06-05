@@ -37,20 +37,28 @@ void AtualizarMovimentoJogador(Jogador *j, char mapa[30][30]) {
     // Solução de teletransporte (Requisito mínimo do trabalho)
     if (blocoAtual == 'S' && (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W))) {
         // Procura a primeira ocorrência de 'D' acima na mesma coluna
-        for (int i = l - 1; i >= 0; i--) {
+        //não querendo ser chereta, mas eu mudei o for para um while, assim n precisa usar break aqui
+        int i = l - 1;
+        int encontrou = 0;
+        while (i >= 0 && encontrou == 0) {
             if (mapa[i][c] == 'D') {
                 j->pos.linha = i;
-                break;
+                encontrou = 1;
             }
+            i--;
         }
     }
     else if (blocoAtual == 'D' && (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S))) {
         // Procura a primeira ocorrência de 'S' abaixo na mesma coluna
-        for (int i = l + 1; i < 30; i++) {
+        //aqui tbm mudei
+        int i = l + 1;
+        int encontrou = 0;
+        while (i < 30 && encontrou == 0) {
             if (mapa[i][c] == 'S') {
                 j->pos.linha = i;
-                break;
+                encontrou = 1;
             }
+            i++;
         }
     }
 }
