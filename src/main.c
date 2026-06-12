@@ -24,7 +24,8 @@ int main(void)
 
     TelaAtual estadoAtual = TELA_MENU;
     int sairDoJogo = 0;
-    int opcaoSelecionadaMenu = 0; 
+    int opcaoSelecionadaMenu = 0;
+    int opcaoSelecionadaPausa = 0;
     int faseAtual = 1;
     float tempoFase = 0.0f;
 
@@ -84,28 +85,37 @@ int main(void)
                 // tenta abrir o próximo mapa para verficicar se ele existe.
                 FILE *ficheiroTeste = fopen(nomeFicheiro, "r");
                 if (ficheiroTeste != NULL) {
-                fclose(ficheiroTeste);
+                    fclose(ficheiroTeste);
         
-                // Se o mapa existe, carrega o novo mapa
-                CarregarMapa(nomeFicheiro, mapa, &jogador, listaInimigos, &qtdInimigos);
+                    // Se o mapa existe, carrega o novo mapa
+                    CarregarMapa(nomeFicheiro, mapa, &jogador, listaInimigos, &qtdInimigos);
                 } else {
-                SalvarNovoRecorde(tempoFase);
+                    SalvarNovoRecorde(tempoFase);
         
-                faseAtual = 1; // Reseta para próxima run
-                estadoAtual = TELA_RANKING;
+                    faseAtual = 1; // Reseta para próxima run
+                    estadoAtual = TELA_RANKING;
                 }
             }
 
                 if (IsKeyPressed(KEY_TAB)) {
                     estadoAtual = TELA_PAUSA;
+                    opcaoSelecionadaPausa = 0;
                 }
                 break;
 
             case TELA_PAUSA:
-                // TODO: menu de pausa ainda precisa ser implementado.
-                // Detecta o comando para sair do estado de pausa
-                if (IsKeyPressed(KEY_TAB)) {
-                    estadoAtual = TELA_JOGO;
+                if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)) opcaoSelecionadaPausa = (opcaoSelecionadaPausa + 1) % 3;
+                if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) opcaoSelecionadaPausa = (opcaoSelecionadaPausa - 1 + 3) % 3;
+
+                if (IsKeyPressed(KEY_ENTER)) {
+                    if (opcaoSelecionadaPausa == 0) {
+                        estadoAtual = TELA_JOGO;
+                    } else if (opcaoSelecionadaPausa == 1) {
+                        estadoAtual = TELA_MENU;
+                        opcaoSelecionadaMenu = 0;
+                    } else if (opcaoSelecionadaPausa == 2) {
+                        sairDoJogo = 1;
+                    }
                 }
                 break;
 
@@ -139,8 +149,8 @@ int main(void)
                 break;
 
             case TELA_PAUSA:
-                DesenharCenario(mapa); 
-                DesenharMenuPausa();   
+                DesenharCenario(mapa);
+                DesenharMenuPausa(opcaoSelecionadaPausa, screenWidth, screenHeight);
                 break;
 
             case TELA_RANKING:

@@ -2,6 +2,6 @@
 #define MENU_H
 
 void DesenharMenuPrincipal(int opcaoFocada, int screenWidth, int screenHeight);
-void DesenharMenuPausa(void);
+void DesenharMenuPausa(int opcaoFocada, int screenWidth, int screenHeight);
 
 #endif
