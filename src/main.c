@@ -20,7 +20,17 @@ int main(void)
     const int screenHeight = 640;
     InitWindow(screenWidth, screenHeight, "Donkey Kong INF (DKINF)");
     SetTargetFPS(60); 
+    
+    // Inicia dispositivo de áudio
+    InitAudioDevice();
 
+    Music musicaFundo = LoadMusicStream("audio/tema.mp3");
+    SetMusicVolume(musicaFundo, 0.10f);
+    Sound somMorte = LoadSound("audio/morte.mp3");
+    Sound somVitoria = LoadSound("audio/vitoria.mp3");
+    Sound somFase = LoadSound("audio/passFase.mp3");
+
+    PlayMusicStream(musicaFundo);
 
     TelaAtual estadoAtual = TELA_MENU;
     int sairDoJogo = 0;
@@ -37,7 +47,7 @@ int main(void)
     //loop principal
     while (!WindowShouldClose() && !sairDoJogo)
     {
-        
+        UpdateMusicStream(musicaFundo);
         switch (estadoAtual)
         {
             case TELA_MENU:
@@ -69,6 +79,7 @@ int main(void)
 
                 // Verificação de colisões e condições de jogo
                 if (ChecarColisaoJogadorInimigos(&jogador, listaInimigos, qtdInimigos)) {
+                    PlaySound(somMorte);
                     char nomeFicheiro[30];
                     snprintf(nomeFicheiro, sizeof(nomeFicheiro), "mapas/mapa%d.txt", faseAtual);
 
@@ -76,6 +87,7 @@ int main(void)
                 }
 
                if (JogadorAlcancouSaida(&jogador, mapa)) {
+                    PlaySound(somFase);
                     faseAtual++;
     
                     // cria uma string com o nome do proximo mapa.
@@ -90,6 +102,7 @@ int main(void)
                     // Se o mapa existe, carrega o novo mapa
                     CarregarMapa(nomeFicheiro, mapa, &jogador, listaInimigos, &qtdInimigos);
                 } else {
+                    PlaySound(somVitoria);
                     SalvarNovoRecorde(tempoFase);
         
                     faseAtual = 1; // Reseta para próxima run
@@ -160,7 +173,11 @@ int main(void)
 
         EndDrawing();
     }
-
+    UnloadMusicStream(musicaFundo);
+    UnloadSound(somMorte);
+    UnloadSound(somVitoria);
+    UnloadSound(somFase);
+    CloseAudioDevice();
 
     CloseWindow(); 
     return 0;
