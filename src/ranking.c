@@ -10,18 +10,18 @@ static char nomeInput[9] = "\0";
 static int letrasCount = 0;
 
 void SalvarNovoRecorde(float tempoFinal) {
-    RegistroPlacar tempRecords[6]; 
+    RegistroPlacar tempRecords[11]; 
     int total = 0;
     FILE *f = fopen("placar.bin", "rb");
     if (f != NULL) {
-        while (total < 5 && fread(&tempRecords[total], sizeof(RegistroPlacar), 1, f) == 1) { //pega o total de espacos no recorde
+        while (total < 10 && fread(&tempRecords[total], sizeof(RegistroPlacar), 1, f) == 1) { //pega o total de espacos no recorde
             total++;
         }
         fclose(f);
     }
 
 
-    int ehRecorde = (total < 5) || (tempoFinal < tempRecords[total - 1].tempo);
+    int ehRecorde = (total < 10) || (tempoFinal < tempRecords[total - 1].tempo);
 
     if (ehRecorde) {
         tempoSalvar = tempoFinal;
@@ -98,8 +98,8 @@ void AtualizarTelaRanking(int *estadoAtual) {
             if (f != NULL) {
                 int k = 0;
                 int limiteGravacao;
-                if (totalRecords > 5) {
-                    limiteGravacao = 5;
+                if (totalRecords > 10) {
+                    limiteGravacao = 10;
                 } else {
                     limiteGravacao = totalRecords;
                 }
@@ -130,26 +130,31 @@ void DesenharTelaRanking(void) {
         DrawText("Pressione ENTER para salvar o seu tempo", 215, 410, 18, GRAY);
     } 
     else {
-        // PLACAR DE TEMPOS
-        DrawText("--- OS MELHORES TEMPOS ---", 190, 80, 32, GOLD);
+        // PLACAR DE TEMPOS (AJUSTADO PARA 10 PESSOAS)
+        DrawText("--- OS MELHORES TEMPOS ---", 190, 50, 32, GOLD); // Subiu o título de 80 para 50
         
         FILE *f = fopen("placar.bin", "rb");
-        int linhaY = 180;
+        int linhaY = 120; // Subiu a primeira linha de 180 para 120
         int posicao = 1;
         RegistroPlacar r;
 
         if (f == NULL) {
             DrawText("Nenhum recorde registrado ainda!", 220, 240, 20, GRAY);
         } else {
-            while (fread(&r, sizeof(RegistroPlacar), 1, f) == 1) {
-                // DESENHA A LINHA BONITINHA DE CADA NOME
-                DrawText(TextFormat("%d.  %-8s   ...................   %.2fs", posicao, r.nome, r.tempo), 220, linhaY, 24, RAYWHITE);
-                linhaY += 50;
+            while (fread(&r, sizeof(RegistroPlacar), 1, f) == 1 && posicao <= 10) {
+                // MODIFICADO: Fonte reduzida de 24 para 20 e espaçamento Y reduzido de 50 para 35
+                // Também adicionado um ajuste no espaçamento do número da posição para manter o alinhamento pós 10º colocado
+                if (posicao < 10) {
+                    DrawText(TextFormat("%d.   %-8s   ...................   %.2fs", posicao, r.nome, r.tempo), 220, linhaY, 20, RAYWHITE);
+                } else {
+                    DrawText(TextFormat("%d.  %-8s   ...................   %.2fs", posicao, r.nome, r.tempo), 220, linhaY, 20, RAYWHITE);
+                }
+                linhaY += 35; 
                 posicao++;
             }
             fclose(f);
         }
         
-        DrawText("Pressione ENTER para voltar ao Menu", 200, 540, 18, GRAY);
+        DrawText("Pressione ENTER para voltar ao Menu", 230, 570, 18, GRAY);
     }
 }
