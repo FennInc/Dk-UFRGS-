@@ -21,10 +21,7 @@ void AtualizarMovimentoJogador(Jogador *j, char mapa[30][30]) {
     char blocoAbaixo = (l < 29) ? mapa[l+1][c] : ' ';
 
     // -- MOVIMENTO HORIZONTAL --
-    // O movimento horizontal só é permitido quando houver uma plataforma (Z) 
-    // imediatamente abaixo da posição atual do jogador
     if (blocoAbaixo == 'Z' || blocoAtual == 'D' || blocoAtual == 'S') {
-        // Usa IsKeyPressed para mover um bloco por clique (estilo grid/puzzle)
         if ((IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_D)) && c < 29) {
             j->pos.coluna++;
         }
@@ -34,10 +31,8 @@ void AtualizarMovimentoJogador(Jogador *j, char mapa[30][30]) {
     }
 
     // -- MOVIMENTO VERTICAL (ESCADAS) --
-    // Solução de teletransporte (Requisito mínimo do trabalho)
     if (blocoAtual == 'S' && (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W))) {
         // Procura a primeira ocorrência de 'D' acima na mesma coluna
-        //não querendo ser chereta, mas eu mudei o for para um while, assim n precisa usar break aqui
         int i = l - 1;
         int encontrou = 0;
         while (i >= 0 && encontrou == 0) {
@@ -50,7 +45,6 @@ void AtualizarMovimentoJogador(Jogador *j, char mapa[30][30]) {
     }
     else if (blocoAtual == 'D' && (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S))) {
         // Procura a primeira ocorrência de 'S' abaixo na mesma coluna
-        //aqui tbm mudei
         int i = l + 1;
         int encontrou = 0;
         while (i < 30 && encontrou == 0) {
@@ -129,13 +123,13 @@ void DesenharJogador(Jogador *j) {
     if (j->estado == MORTO) return;
 
     int tamanhoTile = 20;
-    int offsetX = 100; // O mesmo offset usado no mapa.c para manter alinhado
+    int offsetX = 100; // O mesmo offset usado no mapa para manter alinhado
     int offsetY = 40;
 
     int posX = offsetX + (j->pos.coluna * tamanhoTile);
     int posY = offsetY + (j->pos.linha * tamanhoTile);
 
-    // Desenha o jogador como um quadrado verde (ou aplique spritesheet depois)
+    // Desenha o jogador como um quadrado verde
     DrawRectangle(posX, posY, tamanhoTile, tamanhoTile, GREEN);
 }
 

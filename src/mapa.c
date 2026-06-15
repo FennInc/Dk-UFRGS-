@@ -26,7 +26,7 @@ void CarregarMapa(const char *nomeArquivo, char mapa[30][30], Jogador *jogador, 
     for (int linha = 0; linha < 30; linha++) {
         for (int coluna = 0; coluna < 30; coluna++) {
             
-            // Pega caractere por caractere, deve ser exatamente 30x30
+            // Pega caractere por caractere
             int ch = fgetc(arquivo);
             
             // Ignora quebras de linha
@@ -39,23 +39,19 @@ void CarregarMapa(const char *nomeArquivo, char mapa[30][30], Jogador *jogador, 
 
             // Define onde as entidades nascem e limpa o cenário atrás delas
             if (ch == 'P') {
-                jogador->pos.linha = linha;
-                jogador->pos.coluna = coluna;
-                jogador->estado = ATIVO;
-                jogador->tempo = 0; // Zera o tempo ao iniciar
-                mapa[linha][coluna] = ' '; // O espaço do jogador fica vazio
+                InicializarJogador(jogador, linha, coluna);
             } 
             else if (ch == 'E') {
                 // tratamento para não passar do limite de inimigos
                 if (*qtdInimigos < 10) {
                     listaInimigos[*qtdInimigos].pos.linha = linha;
                     listaInimigos[*qtdInimigos].pos.coluna = coluna;
-                    listaInimigos[*qtdInimigos].direcao = ESQUERDA; // Inimigo sempre começa indo para a esquerda
+                    listaInimigos[*qtdInimigos].direcao = ESQUERDA;
                     (*qtdInimigos)++;
                 }
-                mapa[linha][coluna] = ' '; // Assim como no jogador, o espaço do inimigo fica vazio
+                mapa[linha][coluna] = ' '; // o espaço do inimigo fica vazio dps de posto
             } 
-            // Se for os outros caracteres, além do P e E,salva na matriz
+            // Se for os outros caracteres salva na matriz
             else {
                 mapa[linha][coluna] = (char)ch;
             }
@@ -96,7 +92,6 @@ void DesenharCenario(char mapa[30][30]) {
                 // Final da fase
                 DrawRectangle(posX, posY, tamanhoTile, tamanhoTile, GOLD);
             }
-            // Espaços vazios não são desenhados
         }
     }
 }

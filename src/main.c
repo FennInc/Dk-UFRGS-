@@ -133,10 +133,13 @@ int main(void)
                 break;
 
             case TELA_RANKING:
-                if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_ESCAPE)) {
-                    estadoAtual = TELA_MENU;
+                AtualizarTelaRanking();
+
+                if (!EstaInserindoNome()) {
+                    if (IsKeyPressed(KEY_ENTER)) {
+                        estadoAtual = TELA_MENU;
+                    }
                 }
-                AtualizarTelaRanking((int*)&estadoAtual);
                 break;
         }
 

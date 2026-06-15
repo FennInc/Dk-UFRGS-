@@ -20,7 +20,6 @@ void SalvarNovoRecorde(float tempoFinal) {
         fclose(f);
     }
 
-
     int ehRecorde = (total < 10) || (tempoFinal < tempRecords[total - 1].tempo);
 
     if (ehRecorde) {
@@ -33,12 +32,12 @@ void SalvarNovoRecorde(float tempoFinal) {
     }
 }
 
-void AtualizarTelaRanking(int *estadoAtual) {
-    // entao, tava tendo u bug que quando apertava o enter essa joça ia direto pro menu e quebrava, por isso aqui tah
+int EstaInserindoNome(void) {
+    return inserindoNome;
+}
+
+void AtualizarTelaRanking(void) {
     if (inserindoNome) {
-        if (*estadoAtual == 0) { 
-            *estadoAtual = 3;
-        }
 
         // limpa buffer
         int chave = GetCharPressed();
@@ -93,7 +92,6 @@ void AtualizarTelaRanking(int *estadoAtual) {
                 i++;
             }
 
-            // decidi por 5, isso aq tbm preve pra nao dar problema e gravar lixo se n tiver 5 recordes
             f = fopen("placar.bin", "wb");
             if (f != NULL) {
                 int k = 0;
@@ -130,11 +128,10 @@ void DesenharTelaRanking(void) {
         DrawText("Pressione ENTER para salvar o seu tempo", 215, 410, 18, GRAY);
     } 
     else {
-        // PLACAR DE TEMPOS (AJUSTADO PARA 10 PESSOAS)
-        DrawText("--- OS MELHORES TEMPOS ---", 190, 50, 32, GOLD); // Subiu o título de 80 para 50
+        DrawText("--- OS MELHORES TEMPOS ---", 190, 50, 32, GOLD);
         
         FILE *f = fopen("placar.bin", "rb");
-        int linhaY = 120; // Subiu a primeira linha de 180 para 120
+        int linhaY = 120;
         int posicao = 1;
         RegistroPlacar r;
 
@@ -142,8 +139,6 @@ void DesenharTelaRanking(void) {
             DrawText("Nenhum recorde registrado ainda!", 220, 240, 20, GRAY);
         } else {
             while (fread(&r, sizeof(RegistroPlacar), 1, f) == 1 && posicao <= 10) {
-                // MODIFICADO: Fonte reduzida de 24 para 20 e espaçamento Y reduzido de 50 para 35
-                // Também adicionado um ajuste no espaçamento do número da posição para manter o alinhamento pós 10º colocado
                 if (posicao < 10) {
                     DrawText(TextFormat("%d.   %-8s   ...................   %.2fs", posicao, r.nome, r.tempo), 220, linhaY, 20, RAYWHITE);
                 } else {

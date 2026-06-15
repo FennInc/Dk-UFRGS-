@@ -11,9 +11,12 @@ typedef struct {
 void SalvarNovoRecorde(float tempoFinal);
 
 // Função para atualizar a lógica da tela de ranking, estado atual passado por ponteiro para poder mandar de volta pra o menu.
-void AtualizarTelaRanking(int *estadoAtual);
+void AtualizarTelaRanking(void);
 
-// Desenha a tela do ranking.
+// Desenha a tela do ranking
 void DesenharTelaRanking(void);
+
+// função para verificar se está inserindo nome WOW
+int EstaInserindoNome(void);
 
 #endif
